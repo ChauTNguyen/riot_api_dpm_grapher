@@ -36,3 +36,6 @@ def convert_to_minutes_seconds(seconds): # 2208 / 60 = 33
     if len(str(c)) == 1:
         c = "0" + c
     return str(int(a)) + ":" + c
+
+def calculate_dpm(total_damage, minutes):
+    return round(total_damage / minutes)
