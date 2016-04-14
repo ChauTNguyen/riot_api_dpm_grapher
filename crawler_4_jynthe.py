@@ -1,16 +1,28 @@
 from crawler import get_match, get_champion_name, get_total_damage_dealt_by_id, get_champ_id, get_match_duration, convert_to_minutes_seconds, calculate_dpm
 from crawler import config
 import time
+import requests
 
 KEY = config.key
 region = "na"
 
 # snownobo match ids. match ids are always first
 # newest to oldest
-match_ids = [2151814134, 2151746897, 2151117303, 2151113256, 2151068241, 2151070857,
-             2148985988, 2148939120, 2148931983, 2148854194, 2148756190, 2148639840,
-             2148575712, 2148518678
-             ]
+
+list_response = requests.get("https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/49188821?api_key=" + KEY).json()
+
+match_ids = []
+
+for i in range(0, 40):
+    if list_response['matches'][i]['role'] == 'DUO_CARRY':
+        match_ids.append(list_response['matches'][i]['matchId'])
+
+
+
+# match_ids = [2151814134, 2151746897, 2151117303, 2151113256, 2151068241, 2151070857,
+#              2148985988, 2148939120, 2148931983, 2148854194, 2148756190, 2148639840,
+#              2148575712, 2148518678, 2133871688
+#              ]
 # match_ids = [2148756190]
 # participants_ids = [1, 3, 5, 8, 1, 1, 8, 8, 1, 7]
 # champions_ids = [22, 81, 202, 22, 236, 236, 42, 42, 15, 202]
