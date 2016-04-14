@@ -24,3 +24,15 @@ def get_total_damage_dealt_by_id(response, participantId):
 
 def get_champ_id(response, participantId):
     return response['participants'][participantId-1]['championId']
+
+def get_match_duration(response):
+    return response['matchDuration']
+
+def convert_to_minutes_seconds(seconds): # 2208 / 60 = 33
+    a = seconds / 60
+    a,b = divmod(a, 1.0)
+    b *= 60
+    c = str(round(b))
+    if len(str(c)) == 1:
+        c = "0" + c
+    return str(int(a)) + ":" + c
