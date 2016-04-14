@@ -21,3 +21,6 @@ def get_champion_name(championId):
 def get_total_damage_dealt_by_id(response, participantId):
     return response['participants'][participantId-1]['stats']['totalDamageDealtToChampions']
     # participantId is +1 in participantIdentities... must account for that
+
+def get_champ_id(response, participantId):
+    return response['participants'][participantId-1]['championId']
