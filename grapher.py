@@ -1,6 +1,6 @@
 import plotly.plotly as py
 import plotly.graph_objs as go
-from crawler_4_jynthe import crawl, avg_dpms
+from crawler import crawl, avg_dpms
 
 # snownobo
 dpm_snownobo = crawl(49188821)
