@@ -5,6 +5,8 @@ KEY = config.key
 
 REGION_ENDPOINT = "https://na.api.pvp.net/api/lol/"
 
+def get_summoner_id(region, summoner_name):
+    return requests.get(REGION_ENDPOINT + region + "/v1.4/summoner/by-name/" + summoner_name + "?api_key=" + KEY).json()[summoner_name]['id']
 
 def get_match(region, matchId):
     """
