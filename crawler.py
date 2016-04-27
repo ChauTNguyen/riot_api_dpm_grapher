@@ -1,52 +1,61 @@
-import config
-import requests
+from crawler import *
+from time import sleep
 
-KEY = config.key
+avg_dpms = []
 
-REGION_ENDPOINT = "https://na.api.pvp.net/api/lol/"
+def crawl(summoner_id):
+    dpms = []
 
+    region = "na"
 
-def get_match(region, matchId):
-    """
-    Retrieve match by match ID.
-    """
-    return requests.get(
-        REGION_ENDPOINT + region + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY)
-        ).json()
+    list_response = get_match_list(region, summoner_id)
 
+    match_ids = []
+    count = 0           # to make it so we only get 50 games...
+    i = 0
+    while count != 50:
+        if list_response['matches'][i]['role'] == 'DUO_CARRY':
+            match_ids.append(list_response['matches'][i]['matchId'])
+            count += 1
+        i += 1
 
-def get_match_list(region, summoner_id):
-    return requests.get("https://na.api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY).json()
+    total_game_seconds = 0.0
+    total_damage = 0.0
 
+    for i in range(0, len(match_ids)):
+        current_match_response = get_match(region, str(match_ids[i]))
 
-def get_champion_name(championId):
-    return requests.get(
-        "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/" + str(championId) + "?api_key=" + KEY
-    ).json()['key']
+        for n in range(0, 10):
+            if current_match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
+                _participant_id = current_match_response['participantIdentities'][n]['participantId']
 
+        print("Game: " + str(i+1) + " - " + convert_to_minutes_seconds(get_match_duration(current_match_response))
+              + " minutes - " + get_champion_name(get_champ_id(current_match_response, _participant_id))
+              + " - Total damage dealt "
+              + str(get_total_damage_dealt_by_id(current_match_response, _participant_id))
+              + " ||| " + "DPM: "
+              + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
+              ) # participant_id must be - 1. the array is 0-9, participantids are 1-10
 
-def get_total_damage_dealt_by_id(response, participantId):
-    return response['participants'][participantId-1]['stats']['totalDamageDealtToChampions']
-    # participantId is +1 in participantIdentities... must account for that
+        total_game_seconds += int(get_match_duration(current_match_response))
+        total_damage += int(get_total_damage_dealt_by_id(current_match_response, _participant_id))
 
+        dpms.append(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
+        sleep(.75) # to stay under the rate limit
 
-def get_champ_id(response, participantId):
-    return response['participants'][participantId-1]['championId']
+    print()
 
+    print("Total seconds wasted: " + str(total_game_seconds))
+    print("Total minutes&seconds wasted: " + str(total_game_seconds / 60))
+    print("Total hours&minutes wasted: " + str(convert_to_minutes_seconds(total_game_seconds / 60)))
 
-def get_match_duration(response):
-    return response['matchDuration']
+    print()
 
+    print("Average damage dealt: " + str(total_damage / len(match_ids)))
+    print("Average game time in seconds: " + str(total_game_seconds / len(match_ids)))
+    print("Average game time in minutes&seconds: " + convert_to_minutes_seconds(total_game_seconds / len(match_ids)))
+    print("Average Dpm: " + str(calculate_dpm(total_damage, total_game_seconds / 60)))
 
-def convert_to_minutes_seconds(seconds):
-    a = seconds / 60
-    a,b = divmod(a, 1.0)
-    b *= 60
-    c = str(round(b))
-    if len(str(c)) == 1:
-        c = "0" + c
-    return str(int(a)) + ":" + c
+    avg_dpms.append(calculate_dpm(total_damage, total_game_seconds / 60))
 
-
-def calculate_dpm(total_damage, minutes):
-    return round(total_damage / minutes)
+    return dpms
