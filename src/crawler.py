@@ -41,7 +41,7 @@ def crawl(summoner_id):
         total_damage += int(get_total_damage_dealt_by_id(current_match_response, _participant_id))
 
         dpms.append(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
-        sleep(.75) # to stay under the rate limit
+        sleep(.9) # to stay under the rate limit
 
     print()
 
@@ -57,5 +57,5 @@ def crawl(summoner_id):
     print("Average Dpm: " + str(calculate_dpm(total_damage, total_game_seconds / 60)))
 
     avg_dpms.append(calculate_dpm(total_damage, total_game_seconds / 60))
-
+    sleep(10)
     return dpms

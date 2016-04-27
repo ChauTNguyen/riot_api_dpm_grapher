@@ -26,7 +26,7 @@ trace_snownobo = go.Scatter(
 print()
 
 # sky_fear
-sky_fear_id = get_summoner_id(region, "SKYFear")
+sky_fear_id = get_summoner_id(region, "skyfear")
 
 dpm_sky_fear = crawl(sky_fear_id)
 
@@ -44,7 +44,7 @@ trace_sky_fear = go.Scatter(
 )
 
 # liquid_fabbbyyy
-liquid_fabbbyyy_id = get_summoner_id(region, "LiquidFabbbyyy")
+liquid_fabbbyyy_id = get_summoner_id(region, "liquidfabbbyyy")
 
 dpm_liquid_fabbbyyy = crawl(liquid_fabbbyyy_id)
 
@@ -62,7 +62,7 @@ trace_liquid_fabbbyyy = go.Scatter(
 )
 
 # doublelift
-doublelift_id = get_summoner_id(region, "Doublelift")
+doublelift_id = get_summoner_id(region, "doublelift")
 
 dpm_doublelift = crawl(doublelift_id)
 
@@ -80,7 +80,47 @@ trace_doublelift = go.Scatter(
     )
 )
 
-data = [trace_snownobo, trace_sky_fear, trace_liquid_fabbbyyy, trace_doublelift]
+# pecake
+cake_id = get_summoner_id(region, "caaaaaaaaaaaaake")
+
+dpm_cake = crawl(cake_id)
+
+xs_cake = []
+for i in range(0, length):
+    xs_cake.append(i)
+trace_cake = go.Scatter(
+    x = xs_cake,
+    y = dpm_cake,
+    mode = "line + markers",
+    name = "caaaaaaaaaaaaake",
+    line = dict(
+        color=('rgb(160, 32, 240'), #160-32-240
+        width=2
+    )
+)
+
+# rikara
+rikara_id = get_summoner_id(region, "rikara")
+
+dpm_rikara = crawl(rikara_id)
+
+xs_rikara = []
+for i in range(0, length):
+    xs_rikara.append(i)
+
+trace_rikara = go.Scatter(
+    x=xs_rikara,
+    y=dpm_rikara,
+    mode="line + markers",
+    name="Rikara",
+    line=dict(
+        color=('rgb(0, 50, 150'),  # 160-32-240
+        width=2
+    )
+)
+
+# array data
+data = [trace_snownobo, trace_sky_fear, trace_liquid_fabbbyyy, trace_doublelift, trace_cake, trace_rikara]
 
 # Plot and embed in ipython notebook!
 py.plot(data, filename='basic-line')
@@ -108,7 +148,20 @@ avg_dpm_doublelift = go.Bar(
     y=avg_dpms[3],
     name='Doublelift'
 )
-data = [avg_dpm_snownobo, avg_dpm_sky_fear, avg_dpm_liquid_fabbbyyy, avg_dpm_doublelift]
+avg_dpm_cake = go.Bar(
+    x=[0,1,2,3],
+    y=avg_dpms[4],
+    name='caaaaaaaaaaaaake'
+)
+avg_dpm_rikara = go.Bar(
+    x=[0,1,2,3],
+    y=avg_dpms[5],
+    name='Rikara'
+)
+
+
+# array data
+data = [avg_dpm_snownobo, avg_dpm_sky_fear, avg_dpm_liquid_fabbbyyy, avg_dpm_doublelift, avg_dpm_cake, avg_dpm_rikara]
 
 layout = go.Layout(
     barmode='group'
