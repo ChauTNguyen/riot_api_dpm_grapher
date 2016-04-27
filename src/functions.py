@@ -1,5 +1,5 @@
-import config
 import requests
+import src.config as config
 
 KEY = config.key
 

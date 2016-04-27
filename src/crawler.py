@@ -1,4 +1,4 @@
-from functions import *
+from src.functions import *
 from time import sleep
 
 avg_dpms = []
