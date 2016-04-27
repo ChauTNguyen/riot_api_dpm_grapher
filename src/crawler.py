@@ -1,4 +1,4 @@
-from crawler import *
+from functions import *
 from time import sleep
 
 avg_dpms = []
