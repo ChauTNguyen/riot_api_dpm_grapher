@@ -5,13 +5,19 @@ KEY = config.key
 
 REGION_ENDPOINT = "https://na.api.pvp.net/api/lol/"
 
+
+# These functions below interact with the API directly
 def get_summoner_id(region, summoner_name):
-    return requests.get(REGION_ENDPOINT + region + "/v1.4/summoner/by-name/" + summoner_name + "?api_key=" + KEY).json()[summoner_name]['id']
+    return requests.get(
+        REGION_ENDPOINT + region + "/v1.4/summoner/by-name/" + summoner_name + "?api_key=" + KEY
+    ).json()[summoner_name]['id']
 
 
 def get_match_list(region, summoner_id):
     """Returns a match list by summoner id."""
-    return requests.get(REGION_ENDPOINT + region + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY).json()
+    return requests.get(
+        REGION_ENDPOINT + region + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY
+    ).json()
 
 
 def get_match(region, matchId):
@@ -28,9 +34,10 @@ def get_champion_name(champion_id):
     ).json()['key']
 
 
-def get_total_damage_dealt_by_id(response, participant_id):
+# These functions below use a match reponse to return specific information within the file
+def get_total_damage_dealt_by_id(match_response, participant_id):
     """Returns total damage dealt by participant id within a match."""
-    return response['participants'][participant_id-1]['stats']['totalDamageDealtToChampions']
+    return match_response['participants'][participant_id-1]['stats']['totalDamageDealtToChampions']
     # participantId is +1 in participantIdentities... must account for that
 
 
@@ -44,6 +51,7 @@ def get_match_duration(match_response):
     return match_response['matchDuration']
 
 
+# Extra functions
 def convert_to_minutes_seconds(seconds):
     a = seconds / 60
     a,b = divmod(a, 1.0)
