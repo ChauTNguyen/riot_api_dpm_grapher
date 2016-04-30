@@ -26,6 +26,7 @@ def crawl(summoner_id):
         current_match_response = get_match(region, str(match_ids[i]))
 
         for n in range(0, 10):
+            # Find the participant ID of the summoner in the current match.
             if current_match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
                 _participant_id = current_match_response['participantIdentities'][n]['participantId']
 
@@ -35,7 +36,7 @@ def crawl(summoner_id):
               + str(get_total_damage_dealt_by_id(current_match_response, _participant_id))
               + " ||| " + "DPM: "
               + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
-              ) # participant_id must be - 1. the array is 0-9, participantids are 1-10
+              ) # participantIds are indexed 1-10 in the json file
 
         total_game_seconds += int(get_match_duration(current_match_response))
         total_damage += int(get_total_damage_dealt_by_id(current_match_response, _participant_id))

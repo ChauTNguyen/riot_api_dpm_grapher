@@ -2,7 +2,9 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 from src.crawler import crawl, avg_dpms
 from src.functions import get_summoner_id
+
 region = "na"
+
 # snownobo
 snownobo_id = get_summoner_id(region, "snownobo")
 
