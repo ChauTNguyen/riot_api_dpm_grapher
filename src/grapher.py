@@ -17,15 +17,7 @@ def graph_dpm():
         for i in range(0, len(ys)):
             xs.append(i)
 
-        trace = go.Scatter(
-            x=xs,
-            y=ys,
-            mode=config[0],
-            name=name,
-            line=config[2]
-        )
-
-        return trace
+        return go.Scatter(x=xs, y=ys, mode=config[0], name=name, line=config[2])
 
     scatter_mode = "line + markers"
 
@@ -65,13 +57,7 @@ def graph_avg_dpm():
         for i in range(0, len(avg_dpms)):
             xs.append(i)
 
-        trace = go.Bar(
-            x=xs,
-            y=avg_dpms[index],
-            name=name
-        )
-
-        return trace
+        return go.Bar(x=xs, y=avg_dpms[index], name=name)
 
     p1_name = "apoiloprice"
     p2_name = "rikara"
@@ -90,7 +76,7 @@ def graph_avg_dpm():
     p7 = get_trace(p7_name, 6)
 
     fig = go.Figure(data=[p1, p2, p3, p4, p5, p6, p7], layout=go.Layout(barmode='group'))
-    plot_url = py.plot(fig, filename='grouped-bar')
+    py.plot(fig, filename='grouped-bar')
 
 
 if __name__ == '__main__':
