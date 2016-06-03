@@ -3,6 +3,7 @@ from time import sleep
 
 avg_dpms = []
 
+
 def crawl(summoner_id):
     dpms = []
 
@@ -11,52 +12,61 @@ def crawl(summoner_id):
     list_response = get_match_list(region, summoner_id)
 
     match_ids = []
-    count = 0           # to make it so we only get 50 games...
+    count = 0
     i = 0
-    while count != 50:
+    while count != 25:
+        sleep(2.5)
         if list_response['matches'][i]['role'] == 'DUO_CARRY':
+            sleep(1)
             match_ids.append(list_response['matches'][i]['matchId'])
             count += 1
+            sleep(3)
         i += 1
+
+    print("\nFinished processing matches.")
 
     total_game_seconds = 0.0
     total_damage = 0.0
 
     for i in range(0, len(match_ids)):
         current_match_response = get_match(region, str(match_ids[i]))
+        print("Finished grabbing match.")
+        sleep(3)
 
         for n in range(0, 10):
             # Find the participant ID of the summoner in the current match.
             if current_match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
+                sleep(2.5)
                 _participant_id = current_match_response['participantIdentities'][n]['participantId']
+            sleep(2.5)
 
-        print("Game: " + str(i+1) + " - " + convert_to_minutes_seconds(get_match_duration(current_match_response))
-              + " minutes - " + get_champion_name(get_champ_id(current_match_response, _participant_id))
-              + " - Total damage dealt "
-              + str(get_total_damage_dealt_by_id(current_match_response, _participant_id))
-              + " ||| " + "DPM: "
-              + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
-              ) # participantIds are indexed 1-10 in the json file
+
+        # print("Game: " + str(i+1) + " - " + convert_to_minutes_seconds(get_match_duration(current_match_response))
+        #       + " minutes - " + get_champion_name(get_champ_id(current_match_response, _participant_id))
+        #       + " - Total damage dealt "
+        #       + str(get_total_damage_dealt_by_id(current_match_response, _participant_id))
+        #       + " ||| " + "DPM: "
+        #       + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
+        #       ) # participantIds are indexed 1-10 in the json file
 
         total_game_seconds += int(get_match_duration(current_match_response))
         total_damage += int(get_total_damage_dealt_by_id(current_match_response, _participant_id))
 
         dpms.append(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
-        sleep(.9) # to stay under the rate limit
 
     print()
 
-    print("Total seconds wasted: " + str(total_game_seconds))
-    print("Total minutes&seconds wasted: " + str(total_game_seconds / 60))
-    print("Total hours&minutes wasted: " + str(convert_to_minutes_seconds(total_game_seconds / 60)))
-
-    print()
-
-    print("Average damage dealt: " + str(total_damage / len(match_ids)))
-    print("Average game time in seconds: " + str(total_game_seconds / len(match_ids)))
-    print("Average game time in minutes&seconds: " + convert_to_minutes_seconds(total_game_seconds / len(match_ids)))
-    print("Average Dpm: " + str(calculate_dpm(total_damage, total_game_seconds / 60)))
+    # print("Total seconds wasted: " + str(total_game_seconds))
+    # print("Total minutes&seconds wasted: " + str(total_game_seconds / 60))
+    # print("Total hours&minutes wasted: " + str(convert_to_minutes_seconds(total_game_seconds / 60)))
+    #
+    # print()
+    #
+    # print("Average damage dealt: " + str(total_damage / len(match_ids)))
+    # print("Average game time in seconds: " + str(total_game_seconds / len(match_ids)))
+    # print("Average game time in minutes&seconds: " + convert_to_minutes_seconds(total_game_seconds / len(match_ids)))
+    # print("Average Dpm: " + str(calculate_dpm(total_damage, total_game_seconds / 60)))
 
     avg_dpms.append(calculate_dpm(total_damage, total_game_seconds / 60))
-    sleep(10)
+    print('Finished appending DPM.')
     return dpms
