@@ -22,16 +22,9 @@ def get_match_list(summoner_id):
 
 
 def get_match(matchId):
-    response = requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
-
-    while response.status_code == TOO_MANY_REQUESTS:      # rate limiter
-        print("\n\tExceeded rate limit.")
-        print("\tTrying again in 5 seconds...")
-        sleep(5)
-        response = requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
-
+    match_response = rate_limiter(requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY)))
     print(" => SUCCESS")
-    return response.json()
+    return match_response.json()
 
 
 def get_champion_name(champion_id):
@@ -62,8 +55,10 @@ def get_participant_id(match_response, summoner_id):
     """Return the participantId of the participant within a match."""
     for n in range(0, 10):
         # Find the participant ID of the summoner in the current match.
-        if match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
-            return match_response['participantIdentities'][n]['participantId']
+        if rate_limiter(match_response['participantIdentities'][n]['player']['summonerId']) == summoner_id:
+            sleep(1.5)
+            return rate_limiter(match_response['participantIdentities'][n]['participantId'])
+        sleep(1.5)
 
 
 def get_matches_with_role(list_response, role, num_of_games):
@@ -88,26 +83,12 @@ def get_matches_with_role(list_response, role, num_of_games):
     count = 0
     i = 0
     while count != num_of_games:
-        role_in_match = list_response['matches'][i]['role']
-
-        while role_in_match == TOO_MANY_REQUESTS:
-            print("\n\tExceeded rate limit.")
-            print("\tTrying again in 5 seconds...")
-            sleep(5)
-            role_in_match = list_response['matches'][i]['role']
+        role_in_match = rate_limiter(list_response['matches'][i]['role'])
 
         if role_in_match == role:
             sleep(2)
-            match_with_role = list_response['matches'][i]['matchId']
-
-            while match_with_role == TOO_MANY_REQUESTS:
-                print("\n\tExceeded rate limit.")
-                print("\tTrying again in 5 seconds...")
-                sleep(5)
-                match_with_role = list_response['matches'][i]['matchId']
-
+            match_with_role = rate_limiter(list_response['matches'][i]['matchId'])
             match_ids.append(match_with_role)
-
             sleep(2)
             count += 1
         i += 1
@@ -116,6 +97,16 @@ def get_matches_with_role(list_response, role, num_of_games):
 
 
 # Extra functions
+def rate_limiter(get):
+    response = get
+    while str(response) == str(TOO_MANY_REQUESTS):
+        print("\n\tExceeded rate limit.")
+        print("\tTrying again in 5 seconds...")
+        sleep(5)
+        response = get
+    return response
+
+
 def convert_to_minutes_seconds(seconds):
     a = seconds / 60
     a,b = divmod(a, 1.0)

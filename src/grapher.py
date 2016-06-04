@@ -61,5 +61,5 @@ def graph_avg_dpm():          # separated the functions (calls many more api req
 
 
 if __name__ == '__main__':
-    # graph_dpm()
+    graph_dpm()
     graph_avg_dpm()
