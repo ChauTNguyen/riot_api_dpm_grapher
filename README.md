@@ -5,6 +5,6 @@ Of course, I later realized that data's only fun if you compare it with other da
 
 OLD EXAMPLE OUTPUT IN PYCHARM (LISTS CHAMPION, GAMETIME, ETC): http://pastebin.com/gxPqcHYk</br></br>
 https://plot.ly/~chautnguyen96/0/apoiloprice-rikara-mvsh-envynien-envylod-skyfear-tm8/
-![screenshot](https://raw.githubusercontent.com/ChauTNguyen/riot_api_dpm_grapher/master/dpms_line_graph.png)
+![screenshot](https://raw.githubusercontent.com/ChauTNguyen/riot_api_dpm_grapher/master/dpms_line_graph.jpeg)
 https://plot.ly/~chautnguyen96/2/apoiloprice-rikara-mvsh-envynien-envylod-skyfear-tm8/
-![screenshot](https://raw.githubusercontent.com/ChauTNguyen/riot_api_dpm_grapher/master/avg_dpms_bar_graph.png)
+![screenshot](https://raw.githubusercontent.com/ChauTNguyen/riot_api_dpm_grapher/master/avg_dpms_bar_graph.jpeg)
