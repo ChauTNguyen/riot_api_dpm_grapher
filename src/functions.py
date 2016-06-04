@@ -59,6 +59,7 @@ def get_match_duration(match_response):
 
 
 def get_participant_id(match_response, summoner_id):
+    """Return the participantId of the participant within a match."""
     for n in range(0, 10):
         # Find the participant ID of the summoner in the current match.
         if match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
@@ -66,6 +67,7 @@ def get_participant_id(match_response, summoner_id):
 
 
 def get_matches_with_role(list_response, role, num_of_games):
+    """Return a list of matches with a certain role."""
     match_ids = []
     count = 0
     i = 0
