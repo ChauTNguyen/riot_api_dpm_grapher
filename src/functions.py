@@ -7,6 +7,7 @@ KEY = config.key
 REGION_ENDPOINT = "https://" + config.REGION + ".api.pvp.net/api/lol/"
 TOO_MANY_REQUESTS = 429
 
+
 # These functions grab responses.
 def get_summoner_id(summoner_name):
     return requests.get(
