@@ -67,7 +67,23 @@ def get_participant_id(match_response, summoner_id):
 
 
 def get_matches_with_role(list_response, role, num_of_games):
-    """Return a list of matches with a certain role."""
+    """
+    Return a list containing matches that all contain the same "role" value.
+    {
+   "matches": [
+      {
+         "timestamp": 1464940489115,
+         "champion": 236,
+         "region": "NA",
+         "queue": "TEAM_BUILDER_DRAFT_RANKED_5x5",
+         "season": "SEASON2016",
+         "matchId": 2205686359,
+         "role": "DUO_CARRY",  <--------
+         "platformId": "NA1",
+         "lane": "BOTTOM"
+      },
+    ...
+    """
     match_ids = []
     count = 0
     i = 0

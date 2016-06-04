@@ -1,7 +1,7 @@
 from src.functions import *
 from time import sleep
 
-NUM_OF_GAMES = 25
+NUM_OF_GAMES = 30
 
 
 def crawl_dpm(summoner_id):
