@@ -4,35 +4,34 @@ from time import sleep
 
 KEY = config.key
 
-REGION_ENDPOINT = "https://na.api.pvp.net/api/lol/"
+REGION_ENDPOINT = "https://" + config.REGION + ".api.pvp.net/api/lol/"
 
 
 # These functions grab responses.
-def get_summoner_id(region, summoner_name):
+def get_summoner_id(summoner_name):
     return requests.get(
-        REGION_ENDPOINT + region + "/v1.4/summoner/by-name/" + summoner_name + "?api_key=" + KEY
+        REGION_ENDPOINT + config.REGION + "/v1.4/summoner/by-name/" + summoner_name + "?api_key=" + KEY
     ).json()[summoner_name]['id']
 
 
-def get_match_list(region, summoner_id):
+def get_match_list(summoner_id):
     """Return a match list by summoner id."""
     return requests.get(
-        REGION_ENDPOINT + region + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY
+        REGION_ENDPOINT + config.REGION + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY
     ).json()
 
 
-def get_match(region, matchId):
-    response = requests.get(REGION_ENDPOINT + region + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
+def get_match(matchId):
+    response = requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
 
     while response.status_code == 429:      # rate limiter
         print("\n\tExceeded rate limit.")
         print("\tTrying again in 5 seconds...")
         sleep(5)
-        response = requests.get(REGION_ENDPOINT + region + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
+        response = requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
 
     print(" => SUCCESS")
     return response.json()
-
 
 
 def get_champion_name(champion_id):
