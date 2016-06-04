@@ -5,7 +5,7 @@ from time import sleep
 KEY = config.key
 
 REGION_ENDPOINT = "https://" + config.REGION + ".api.pvp.net/api/lol/"
-
+TOO_MANY_REQUESTS = 429
 
 # These functions grab responses.
 def get_summoner_id(summoner_name):
@@ -24,7 +24,7 @@ def get_match_list(summoner_id):
 def get_match(matchId):
     response = requests.get(REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY))
 
-    while response.status_code == 429:      # rate limiter
+    while response.status_code == TOO_MANY_REQUESTS:      # rate limiter
         print("\n\tExceeded rate limit.")
         print("\tTrying again in 5 seconds...")
         sleep(5)
@@ -63,6 +63,38 @@ def get_participant_id(match_response, summoner_id):
         # Find the participant ID of the summoner in the current match.
         if match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
             return match_response['participantIdentities'][n]['participantId']
+
+
+def get_matches_with_role(list_response, role, num_of_games):
+    match_ids = []
+    count = 0
+    i = 0
+    while count != num_of_games:
+        role_in_match = list_response['matches'][i]['role']
+
+        while role_in_match == TOO_MANY_REQUESTS:
+            print("\n\tExceeded rate limit.")
+            print("\tTrying again in 5 seconds...")
+            sleep(5)
+            role_in_match = list_response['matches'][i]['role']
+
+        if role_in_match == role:
+            sleep(2)
+            match_with_role = list_response['matches'][i]['matchId']
+
+            while match_with_role == TOO_MANY_REQUESTS:
+                print("\n\tExceeded rate limit.")
+                print("\tTrying again in 5 seconds...")
+                sleep(5)
+                match_with_role = list_response['matches'][i]['matchId']
+
+            match_ids.append(match_with_role)
+
+            sleep(2)
+            count += 1
+        i += 1
+
+    return match_ids
 
 
 # Extra functions

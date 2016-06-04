@@ -8,16 +8,7 @@ def crawl_dpm(summoner_id):
 
     list_response = get_match_list(summoner_id)
 
-    match_ids = []
-    count = 0
-    i = 0
-    while count != NUM_OF_GAMES:
-        if list_response['matches'][i]['role'] == 'DUO_CARRY':
-            sleep(2)
-            match_ids.append(list_response['matches'][i]['matchId'])
-            sleep(2)
-            count += 1
-        i += 1
+    match_ids = get_matches_with_role(list_response, 'DUO_CARRY', NUM_OF_GAMES)
 
     print("\nFinished processing matches.")
 
@@ -29,6 +20,8 @@ def crawl_dpm(summoner_id):
             calculate_dpm(get_total_damage_dealt_by_id(current_match_response, get_participant_id(current_match_response, summoner_id)),
                           int(get_match_duration(current_match_response) / 60)))
 
+        sleep(2)
+
     print()
 
     return dpms
@@ -37,16 +30,7 @@ def crawl_dpm(summoner_id):
 def crawl_avg_dpm(summoner_id):
     list_response = get_match_list(summoner_id)
 
-    match_ids = []
-    count = 0
-    i = 0
-    while count != NUM_OF_GAMES:
-        if list_response['matches'][i]['role'] == 'DUO_CARRY':
-            sleep(2)
-            match_ids.append(list_response['matches'][i]['matchId'])
-            sleep(2)
-            count += 1
-        i += 1
+    match_ids = get_matches_with_role(list_response, 'DUO_CARRY', NUM_OF_GAMES)
 
     print("\nFinished processing matches.")
 
@@ -58,6 +42,7 @@ def crawl_avg_dpm(summoner_id):
         current_match_response = get_match(str(match_ids[i]))
         total_game_seconds += int(get_match_duration(current_match_response))
         total_damage += int(get_total_damage_dealt_by_id(current_match_response, get_participant_id(current_match_response, summoner_id)))
+        sleep(2)
 
     print()
 
