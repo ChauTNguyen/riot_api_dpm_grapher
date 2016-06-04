@@ -1,18 +1,20 @@
 import plotly.plotly as py
 import plotly.graph_objs as go
-from src.crawler import crawl, avg_dpms
+from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
-from time import sleep
+
 
 REGION = "na"
-players = ['apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
+players_of_interest = ['apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
+avg_dpms = []
 
 def graph_dpm():
     def get_trace(name, config):
         id = get_summoner_id(REGION, name)
-        sleep(2)
         xs = []             # game #'s
-        ys = crawl(id)      # dpm's
+        ys = crawl_dpm(id)  # dpm's
+
+        print(name + "'s analsis completed.")
 
         for i in range(0, len(ys)):
             xs.append(i)
@@ -32,26 +34,29 @@ def graph_dpm():
     ]
 
     traces = []
-    for i in range(0, len(players)):
-        traces.append(get_trace(players[i], configs[i]))
+    for i in range(0, len(players_of_interest)):
+        traces.append(get_trace(players_of_interest[i], configs[i]))
 
     py.plot(traces, filename='basic-line')
 
 
-def graph_avg_dpm():
+def graph_avg_dpm():    # separated the functions (calls many more api requests though)
     def get_trace(name, index):
-        sleep(2)
-        xs = []  # game #'s
+        id = get_summoner_id(REGION, name)
+        xs = []             # game #'s
+        avg_dpms.append(crawl_avg_dpm(id))
+        ys = avg_dpms[index]
 
-        for i in range(0, len(avg_dpms)):
+        print(name + "'s analsis completed.")
+
+        for i in range(0, len(players_of_interest)):
             xs.append(i)
 
-        return go.Bar(x=xs, y=avg_dpms[index], name=name)
+        return go.Bar(x=xs, y=ys, name=name)
 
     traces = []
-
-    for i in range(0, len(players)):
-        traces.append(get_trace(players[i], i))
+    for i in range(0, len(players_of_interest)):
+        traces.append(get_trace(players_of_interest[i], i))
 
     fig = go.Figure(data=traces, layout=go.Layout(barmode='group'))
     py.plot(fig, filename='grouped-bar')

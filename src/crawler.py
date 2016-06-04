@@ -1,12 +1,10 @@
 from src.functions import *
 from time import sleep
 
-avg_dpms = []
+NUM_OF_GAMES = 25
 
-
-def crawl(summoner_id):
+def crawl_dpm(summoner_id):
     dpms = []
-
     region = "na"
 
     list_response = get_match_list(region, summoner_id)
@@ -14,45 +12,29 @@ def crawl(summoner_id):
     match_ids = []
     count = 0
     i = 0
-    while count != 25:
-        sleep(2.5)
+    while count != NUM_OF_GAMES:
         if list_response['matches'][i]['role'] == 'DUO_CARRY':
-            sleep(1)
             match_ids.append(list_response['matches'][i]['matchId'])
             count += 1
-            sleep(3)
         i += 1
 
     print("\nFinished processing matches.")
 
-    total_game_seconds = 0.0
-    total_damage = 0.0
-
     for i in range(0, len(match_ids)):
+        print("Grabbing match", i + 1, end="")
         current_match_response = get_match(region, str(match_ids[i]))
-        print("Finished grabbing match.")
-        sleep(3)
-
-        for n in range(0, 10):
-            # Find the participant ID of the summoner in the current match.
-            if current_match_response['participantIdentities'][n]['player']['summonerId'] == summoner_id:
-                sleep(2.5)
-                _participant_id = current_match_response['participantIdentities'][n]['participantId']
-            sleep(2.5)
-
 
         # print("Game: " + str(i+1) + " - " + convert_to_minutes_seconds(get_match_duration(current_match_response))
         #       + " minutes - " + get_champion_name(get_champ_id(current_match_response, _participant_id))
         #       + " - Total damage dealt "
         #       + str(get_total_damage_dealt_by_id(current_match_response, _participant_id))
         #       + " ||| " + "DPM: "
-        #       + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
+        #       + str(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / NUMBER_OF_GAMES)))
         #       ) # participantIds are indexed 1-10 in the json file
 
-        total_game_seconds += int(get_match_duration(current_match_response))
-        total_damage += int(get_total_damage_dealt_by_id(current_match_response, _participant_id))
-
-        dpms.append(calculate_dpm(get_total_damage_dealt_by_id(current_match_response, _participant_id), int(get_match_duration(current_match_response) / 60)))
+        dpms.append(
+            calculate_dpm(get_total_damage_dealt_by_id(current_match_response, get_participant_id(current_match_response, summoner_id)),
+                          int(get_match_duration(current_match_response) / 60)))
 
     print()
 
@@ -67,6 +49,38 @@ def crawl(summoner_id):
     # print("Average game time in minutes&seconds: " + convert_to_minutes_seconds(total_game_seconds / len(match_ids)))
     # print("Average Dpm: " + str(calculate_dpm(total_damage, total_game_seconds / 60)))
 
-    avg_dpms.append(calculate_dpm(total_damage, total_game_seconds / 60))
-    print('Finished appending DPM.')
+    print("Finished appending DPM.")
     return dpms
+
+
+def crawl_avg_dpm(summoner_id):
+    avg_dpm = 0
+    region = "na"
+
+    list_response = get_match_list(region, summoner_id)
+
+    match_ids = []
+    count = 0
+    i = 0
+    while count != NUM_OF_GAMES:
+        if list_response['matches'][i]['role'] == 'DUO_CARRY':
+            match_ids.append(list_response['matches'][i]['matchId'])
+            count += 1
+        i += 1
+
+    print("\nFinished processing matches.")
+
+    total_game_seconds = 0.0
+    total_damage = 0.0
+
+    for i in range(0, len(match_ids)):
+        print("Grabbing match", i + 1, end="")
+        current_match_response = get_match(region, str(match_ids[i]))
+        total_game_seconds += int(get_match_duration(current_match_response))
+        total_damage += int(get_total_damage_dealt_by_id(current_match_response, get_participant_id(current_match_response, summoner_id)))
+
+    print()
+
+    avg_dpm = calculate_dpm(total_damage, total_game_seconds / 60)
+    print("Finished appending AVG DPM.")
+    return avg_dpm
