@@ -1,6 +1,7 @@
 import requests
-import src.config as config
 from time import sleep
+
+import src.config as config
 
 KEY = config.key
 
