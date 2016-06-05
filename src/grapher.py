@@ -14,7 +14,7 @@ def graph_dpm():
         xs = []                 # game #'s
         ys = crawl_dpm(id)      # dpm's
 
-        print(name + "'s analysis completed.")
+        print(name + "'s analysis completed.\n")
 
         for i in range(0, len(ys)):
             xs.append(i)
@@ -23,13 +23,15 @@ def graph_dpm():
 
     scatter_mode = "line + markers"
 
-    configs = [(scatter_mode, dict(color=('rgb(0, 255, 0)'), width=2)),
-               (scatter_mode, dict(color=('rgb(0, 50, 150'), width=2)),
-               (scatter_mode, dict(color=('rgb(20, 90, 30'), width=2)),
-               (scatter_mode, dict(color=('rgb(92, 42, 120'), width=2)),
-               (scatter_mode, dict(color=('rgb(123, 91, 32'), width=2)),
-               (scatter_mode, dict(color=('rgb(232, 92, 10)'), width=2)),
-               (scatter_mode, dict(color=('rgb(23, 150, 203'), width=2))]
+    configs = [
+        (scatter_mode, dict(color=('rgb(0, 255, 0)'), width=2)),
+        (scatter_mode, dict(color=('rgb(0, 50, 150'), width=2)),
+        (scatter_mode, dict(color=('rgb(20, 90, 30'), width=2)),
+        (scatter_mode, dict(color=('rgb(92, 42, 120'), width=2)),
+        (scatter_mode, dict(color=('rgb(123, 91, 32'), width=2)),
+        (scatter_mode, dict(color=('rgb(232, 92, 10)'), width=2)),
+        (scatter_mode, dict(color=('rgb(23, 150, 203'), width=2))
+    ]
 
     traces = []
     for i in range(0, len(players_of_interest)):

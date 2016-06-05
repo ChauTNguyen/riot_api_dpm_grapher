@@ -11,8 +11,11 @@ def crawl_dpm(summoner_id):
     for i in range(0, len(match_ids)):
         print("Grabbing match", i + 1, end="")
         curr_match_res = get_match(match_ids[i])
-        dpms.append(calculate_dpm(get_total_damage_dealt_by_id(curr_match_res, get_participant_id(curr_match_res, summoner_id)),
-                                  int(get_match_duration(curr_match_res) / 60)))
+        dpms.append(calculate_dpm(
+            get_total_damage_dealt_by_id(curr_match_res, get_participant_id(curr_match_res, summoner_id)),
+            int(get_match_duration(curr_match_res) / 60)
+            )
+        )
 
     return dpms
 
@@ -27,6 +30,8 @@ def crawl_avg_dpm(summoner_id):
         print("Grabbing match", i + 1, end="")
         curr_match_res = get_match(str(match_ids[i]))
         total_game_secs += int(get_match_duration(curr_match_res))
-        total_dmg += int(get_total_damage_dealt_by_id(curr_match_res, get_participant_id(curr_match_res, summoner_id)))
+        total_dmg += int(get_total_damage_dealt_by_id(
+            curr_match_res, get_participant_id(curr_match_res, summoner_id))
+        )
 
     return calculate_dpm(total_dmg, total_game_secs / 60)
