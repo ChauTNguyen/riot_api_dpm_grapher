@@ -1,6 +1,5 @@
 from src.functions import *
-
-NUM_OF_GAMES = 30
+from .config import NUM_OF_GAMES
 
 
 def crawl_dpm(summoner_id):
@@ -9,7 +8,7 @@ def crawl_dpm(summoner_id):
     match_ids = get_matches_with_role(list_response, 'DUO_CARRY', NUM_OF_GAMES)
 
     for i in range(0, len(match_ids)):
-        print("Grabbing match", i + 1, end="")
+        print("Grabbing match stats", i + 1, end="")
         curr_match_res = get_match(match_ids[i])
         dpms.append(calculate_dpm(
             get_total_damage_dealt_by_id(curr_match_res, get_participant_id(curr_match_res, summoner_id)),
@@ -27,7 +26,7 @@ def crawl_avg_dpm(summoner_id):
     total_dmg = 0.0
 
     for i in range(0, len(match_ids)):
-        print("Grabbing match", i + 1, end="")
+        print("Grabbing match stats", i + 1, end="")
         curr_match_res = get_match(str(match_ids[i]))
         total_game_secs += int(get_match_duration(curr_match_res))
         total_dmg += int(get_total_damage_dealt_by_id(

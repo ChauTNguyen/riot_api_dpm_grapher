@@ -2,7 +2,7 @@ import requests
 from time import sleep
 
 import src.config as config
-
+from .config import NUM_OF_GAMES
 KEY = config.key
 
 REGION_ENDPOINT = "https://" + config.REGION + ".api.pvp.net/api/lol/"
@@ -60,7 +60,7 @@ def get_participant_id(match_response, summoner_id):
         if rate_limiter(match_response['participantIdentities'][n]['player']['summonerId']) == summoner_id:
             sleep(1.5)
             return rate_limiter(match_response['participantIdentities'][n]['participantId'])
-        sleep(1.5)
+        sleep(.5)
 
 
 def get_matches_with_role(list_response, role, num_of_games):
@@ -88,24 +88,22 @@ def get_matches_with_role(list_response, role, num_of_games):
         role_in_match = rate_limiter(list_response['matches'][i]['role'])
 
         if role_in_match == role:
-            sleep(2)
+            sleep(1.5)
             match_with_role = rate_limiter(list_response['matches'][i]['matchId'])
             match_ids.append(match_with_role)
-            sleep(2)
             count += 1
+            print("LOADED", count, "/", NUM_OF_GAMES)
         i += 1
 
     return match_ids
 
 
 # Extra functions
-def rate_limiter(get):
-    response = get
+def rate_limiter(response):
     while str(response) == str(TOO_MANY_REQUESTS):
         print("\n\tExceeded rate limit.")
         print("\tTrying again in 5 seconds...")
         sleep(5)
-        response = get
     return response
 
 
