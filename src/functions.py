@@ -18,15 +18,13 @@ def get_summoner_id(summoner_name):
 
 def get_match_list(summoner_id):
     """Return a match list by summoner id."""
-    return requests.get(
-        REGION_ENDPOINT + config.REGION + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY
-    ).json()
+    url = REGION_ENDPOINT + config.REGION + "/v2.2/matchlist/by-summoner/" + str(summoner_id) + "?api_key=" + KEY
+    return rate_limiter(requests.get(url), url).json()
 
 
 def get_match(matchId):
     url = REGION_ENDPOINT + config.REGION + "/v2.2/match/" + str(matchId) + "?api_key=" + str(KEY)
-    match_response = rate_limiter(
-        requests.get(url), url)
+    match_response = rate_limiter(requests.get(url), url)
     print(" => SUCCESS")
     return match_response.json()
 
@@ -34,9 +32,7 @@ def get_match(matchId):
 def get_champion_name(champion_id):
     """Return a champion name corresponding to the champion id."""
     url = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/" + str(champion_id) + "?api_key=" + KEY
-    return rate_limiter(
-        requests.get(url), url
-    ).json()['key']
+    return rate_limiter(requests.get(url), url).json()['key']
 
 
 # These functions below use a match response to return specific information.

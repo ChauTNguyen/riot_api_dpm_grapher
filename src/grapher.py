@@ -5,7 +5,7 @@ from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
 
 
-players_of_interest = ['apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
+players_of_interest = ['chaunguyen', 'fiftyshades', 'apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
 avg_dpms = []
 
 
@@ -25,13 +25,15 @@ def graph_dpm():
     scatter_mode = "line + markers"
 
     configs = [
+        (scatter_mode, dict(color=('rgb(182, 190, 220'), width=2)),
         (scatter_mode, dict(color=('rgb(0, 255, 0)'), width=2)),
         (scatter_mode, dict(color=('rgb(0, 50, 150'), width=2)),
         (scatter_mode, dict(color=('rgb(20, 90, 30'), width=2)),
         (scatter_mode, dict(color=('rgb(92, 42, 120'), width=2)),
         (scatter_mode, dict(color=('rgb(123, 91, 32'), width=2)),
         (scatter_mode, dict(color=('rgb(232, 92, 10)'), width=2)),
-        (scatter_mode, dict(color=('rgb(23, 150, 203'), width=2))
+        (scatter_mode, dict(color=('rgb(23, 150, 203'), width=2)),
+        (scatter_mode, dict(color=('rgb(1200, 90, 30'), width=2))
     ]
 
     traces = []
@@ -65,4 +67,4 @@ def graph_avg_dpm():          # separated the functions (calls many more api req
 
 if __name__ == '__main__':
     graph_dpm()
-    graph_avg_dpm()
+    # graph_avg_dpm()
