@@ -4,25 +4,19 @@ import plotly.plotly as py
 from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
 
-
-players_of_interest = ['chaunguyen', 'fiftyshades', 'apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
+player_names = ['apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
 avg_dpms = []
 
 
 def graph_dpm():
     def get_trace(name, config):
         id = get_summoner_id(name)
-        xs = []                 # game #'s
-        ys = crawl_dpm(id)      # dpm's
-
+        xs = [i for i in range(0, len(player_names))]  # game #'s
+        ys = crawl_dpm(id)  # dpm's
         print(name + "'s analysis completed.\n")
-
-        for i in range(0, len(ys)):
-            xs.append(i)
-
         return go.Scatter(x=xs, y=ys, mode=config[0], name=name, line=config[1])
 
-    scatter_mode = "line + markers"
+    scatter_mode = 'line + markers'
 
     configs = [
         (scatter_mode, dict(color=('rgb(182, 190, 220'), width=2)),
@@ -36,35 +30,25 @@ def graph_dpm():
         (scatter_mode, dict(color=('rgb(1200, 90, 30'), width=2))
     ]
 
-    traces = []
-    for i in range(0, len(players_of_interest)):
-        traces.append(get_trace(players_of_interest[i], configs[i]))
-
+    traces = [(get_trace(player_names[i], configs[i])) for i in range(0, len(player_names))]
     py.plot(traces, filename='basic-line')
 
 
-def graph_avg_dpm():          # separated the functions (calls many more api requests though if both are run ofc)
+def graph_avg_dpm():  # separated the functions (calls many more api requests though if both are run ofc)
     def get_trace(name, index):
         id = get_summoner_id(name)
-        xs = []               # game #'s
+        xs = [i for i in range(0, len(player_names))]  # game #'s
         avg_dpms.append(crawl_avg_dpm(id))
         ys = avg_dpms[index]
 
         print(name + "'s analysis completed.")
-
-        for i in range(0, len(players_of_interest)):
-            xs.append(i)
-
         return go.Bar(x=xs, y=ys, name=name)
 
-    traces = []
-    for i in range(0, len(players_of_interest)):
-        traces.append(get_trace(players_of_interest[i], i))
-
+    traces = [(get_trace(player_names[i], i)) for i in range(0, len(player_names))]
     fig = go.Figure(data=traces, layout=go.Layout(barmode='group'))
     py.plot(fig, filename='grouped-bar')
 
 
 if __name__ == '__main__':
     graph_dpm()
-    # graph_avg_dpm()
+    graph_avg_dpm()

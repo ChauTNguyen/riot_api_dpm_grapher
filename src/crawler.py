@@ -33,6 +33,5 @@ def crawl_avg_dpm(summoner_id):
         total_dmg += int(get_total_damage_dealt_by_id(
             curr_match_res, get_participant_id(curr_match_res, summoner_id))
         )
-        sleep(1.5)
 
     return calculate_dpm(total_dmg, total_game_secs / 60)
