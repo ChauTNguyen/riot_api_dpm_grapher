@@ -1,6 +1,6 @@
 import plotly.graph_objs as go
 import plotly.plotly as py
-from .config import NUM_OF_GAMES
+from src.config import NUM_OF_GAMES
 from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
 
