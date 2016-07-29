@@ -1,6 +1,6 @@
 import plotly.graph_objs as go
 import plotly.plotly as py
-
+from .config import NUM_OF_GAMES
 from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
 
@@ -11,7 +11,7 @@ avg_dpms = []
 def graph_dpm():
     def get_trace(name, config):
         id = get_summoner_id(name)
-        xs = [i for i in range(0, len(player_names))]  # game #'s
+        xs = [i for i in range(0, NUM_OF_GAMES)]  # game #'s
         ys = crawl_dpm(id)  # dpm's
         print(name + "'s analysis completed.\n")
         return go.Scatter(x=xs, y=ys, mode=config[0], name=name, line=config[1])
@@ -37,7 +37,7 @@ def graph_dpm():
 def graph_avg_dpm():
     def get_trace(name, index):
         id = get_summoner_id(name)
-        xs = [i for i in range(0, len(player_names))]  # game #'s
+        xs = [i for i in range(0, NUM_OF_GAMES)]  # game #'s
         avg_dpms.append(crawl_avg_dpm(id))
         ys = avg_dpms[index]
 
