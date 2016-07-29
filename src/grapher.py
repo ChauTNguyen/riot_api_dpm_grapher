@@ -4,7 +4,7 @@ import plotly.plotly as py
 from src.crawler import crawl_dpm, crawl_avg_dpm
 from src.functions import get_summoner_id
 
-player_names = ['apoiloprice', 'rikara', 'mvsh', 'envynien', 'envylod', 'skyfear', 'tm8']
+player_names = ['apoiloprice', 'rikara', 'mvsh', 'c9sneaky', 'envylod', 'skyfear', 'tm8']
 avg_dpms = []
 
 
@@ -19,22 +19,22 @@ def graph_dpm():
     scatter_mode = 'line + markers'
 
     configs = [
-        (scatter_mode, dict(color=('rgb(182, 190, 220'), width=2)),
-        (scatter_mode, dict(color=('rgb(0, 255, 0)'), width=2)),
-        (scatter_mode, dict(color=('rgb(0, 50, 150'), width=2)),
-        (scatter_mode, dict(color=('rgb(20, 90, 30'), width=2)),
-        (scatter_mode, dict(color=('rgb(92, 42, 120'), width=2)),
-        (scatter_mode, dict(color=('rgb(123, 91, 32'), width=2)),
-        (scatter_mode, dict(color=('rgb(232, 92, 10)'), width=2)),
-        (scatter_mode, dict(color=('rgb(23, 150, 203'), width=2)),
-        (scatter_mode, dict(color=('rgb(1200, 90, 30'), width=2))
+        (scatter_mode, dict(color='rgb(182, 190, 220)', width=2)),
+        (scatter_mode, dict(color='rgb(0, 255, 0)', width=2)),
+        (scatter_mode, dict(color='rgb(0, 50, 150', width=2)),
+        (scatter_mode, dict(color='rgb(20, 90, 30)', width=2)),
+        (scatter_mode, dict(color='rgb(92, 42, 120)', width=2)),
+        (scatter_mode, dict(color='rgb(123, 91, 32)', width=2)),
+        (scatter_mode, dict(color='rgb(232, 92, 10)', width=2)),
+        (scatter_mode, dict(color='rgb(23, 150, 203)', width=2)),
+        (scatter_mode, dict(color='rgb(1200, 90, 30)', width=2))
     ]
 
     traces = [(get_trace(player_names[i], configs[i])) for i in range(0, len(player_names))]
     py.plot(traces, filename='basic-line')
 
 
-def graph_avg_dpm():  # separated the functions (calls many more api requests though if both are run ofc)
+def graph_avg_dpm():
     def get_trace(name, index):
         id = get_summoner_id(name)
         xs = [i for i in range(0, len(player_names))]  # game #'s
